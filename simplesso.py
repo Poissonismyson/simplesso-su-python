@@ -146,6 +146,8 @@ m = [[1, 2, 3, 1, 0, 0], [2, -1, -5, 0, 1, 0], [1, 2, -1, 0, 0, 1]] #matrice di 
 B = [[1, 0, 0], [0, 1, 0], [0, 0, 1]] #matrice base
 b = [3, 2, 1] #vettore dei termini noti
 
+
+
 x_b = find_base(m, 'b') #vettore degli indici delle variabili di base
 x_n = find_base(m, 'c') #vettore degli indici delle variabili non di base
 N_t = calcola_matrice_non_di_base(m, x_n) #matrice non di base
@@ -158,8 +160,9 @@ c_n = [u[k] for k in x_n] #vettore delle variabili non di base della funzione ob
 
 def simplesso(x_b, x_n, N_t, c_b, c_n, b, iterazione =0):
 
-    print(f"Iterazione: {iterazione}\n\n")
+    print(f"\n** Iterazione: {iterazione} **\n")
 
+    print("\nForma canonica:\n")
     print(f"x_b: {x_b}")
     print(f"x_n: {x_n}")
     print(f"c_b: {c_b}")
@@ -167,56 +170,60 @@ def simplesso(x_b, x_n, N_t, c_b, c_n, b, iterazione =0):
     print(f"N_t: {print_matrice(N_t)}")
     print(f"b: {print_vettore(b)}\n")
 
+    print("\nCalcolo dei costi ridotti: ")
     g_0 = calcola_gamma_zero(N_t, c_b, c_n)
     print(f"Gamma zero: {g_0}")
 
-    print("test di ottimalità: ", test_ottimo(g_0))
+    print("\nTest di ottimalità: ", test_ottimo(g_0))
 
 
     if test_ottimo(g_0):
         return soluzione(x_b, b)
 
-    print("test di illimitatezza: ", end='') 
+    print("\nTest di illimitatezza: ", end='') 
     print(test_illimitatezza(g_0, N_t)) #test di illimitatezza
     if test_illimitatezza(g_0,N_t):
-        return "illimitato"
+        return "Il problema è illimitato inferiormente"
 
+    print("\n\nCostruzione nuova base ammissibile:\n")
 
     indice_variabile_entrante = g_0.index(min(g_0))
     vettore_entrante = N_t[indice_variabile_entrante]
     print(f"Indice variabile entrante: {indice_variabile_entrante}")
-    print(f"vettore entrante: {vettore_entrante}")
+    print(f"Vettore entrante: {vettore_entrante}")
 
     indice_variabile_uscente = criterio_uscita(indice_variabile_entrante, N_t, b)
+    vettore_uscente = B[indice_variabile_uscente]
     print(f"Indice variabile uscente: {indice_variabile_uscente}")
+    print(f"Vettore uscente: {vettore_uscente}")
 
     N_1_t = [] #nuova matrice non di base trasposta
 
     for i in range(len(N_t)):
         if i == indice_variabile_entrante:
-            N_1_t.append(B[indice_variabile_uscente])
+            N_1_t.append(vettore_uscente)
         else:
             N_1_t.append(N_t[i])
 
     N_1 = trasposta_matrice(N_1_t)
-    print(f"N_1: {print_matrice(N_1)}\n \n \n")
+    print(f"Nuova matrice N: {print_matrice(N_1)}\n")
 
-
+    print("\nCostruzione nuova forma canonica:\n")
 
     N_c = costruzione_base_canonica(N_1, vettore_entrante, indice_variabile_uscente, b)
     b_c = costruzione_base_canonica(N_1, vettore_entrante, indice_variabile_uscente, b, 1)
 
-    print(f"nuova fuori base canonica: {print_matrice(N_c)}")
-    print(f"vettore b nuovo: {print_vettore(b_c)}")
+    print(f"nuova matrice fuori base: {print_matrice(N_c)}")
+    print(f"nuovo vettore soluzione: {print_vettore(b_c)}")
 
     N_c_t = trasposta_matrice(N_c)
-    print(f"trasposta fuori base canonica: {print_matrice(N_c_t)}\n")
+    print(f"trasposta matrice fuori base: {print_matrice(N_c_t)}\n\n")
 
     coppia = nuova_coppia_vettori_indici(x_b, x_n, indice_variabile_entrante, indice_variabile_uscente)
     x_bc = coppia[0]
     x_nc = coppia[1]
 
-    
+    print('Nuova forma canonica:\n')
     print(f"x_b: {x_bc}")
     print(f"x_n: {x_nc}")
     print(f"c_b: {c_b}")
@@ -231,64 +238,5 @@ def simplesso(x_b, x_n, N_t, c_b, c_n, b, iterazione =0):
 
 soluz = simplesso(x_b, x_n, N_t, c_b, c_n, b)
 
-print(print_vettore(soluz))
+print(f"\nSoluzione: {print_vettore(soluz)}")
 
-
-'''
-    g_0 = calcola_gamma_zero(N_c_t, c_b, c_n)
-    print(g_0)
-
-    indice_variabile_entrante = g_0.index(min(g_0))
-    vettore_entrante = N_c_t[indice_variabile_entrante]
-    print(f"Indice variabile entrante: {indice_variabile_entrante}")
-    print(f"vettore entrante: {vettore_entrante}")
-
-    indice_variabile_uscente = criterio_uscita(indice_variabile_entrante, N_c_t, b_c)
-    print(f"Indice variabile uscente: {indice_variabile_uscente}")
-'''
-
-'''
-g_0 = calcola_gamma_zero(N_t, c_b, c_n)
-print(f"Gamma zero: {g_0}")
-
-print("test di ottimalità: ", end='')
-print(test_ottimo(g_0))
-
-print("test di illimitatezza: ", end='') 
-print(test_illimitatezza(g_0, N_t)) #test di illimitatezza
-
-
-indice_variabile_entrante = g_0.index(min(g_0))
-vettore_entrante = N_t[indice_variabile_entrante]
-print(f"Indice variabile entrante: {indice_variabile_entrante}")
-print(f"vettore entrante: {vettore_entrante}")
-indice_variabile_uscente = criterio_uscita(indice_variabile_entrante, N_t, b)
-
-print(f"Indice variabile uscente: {indice_variabile_uscente}")
-
-N_1_t = []
-
-for i in range(len(N_t)):
-    if i == indice_variabile_entrante:
-        N_1_t.append(B[indice_variabile_uscente])
-    else:
-        N_1_t.append(N_t[i])
-
-N_1 = trasposta_matrice(N_1_t)
-print("N_1:", N_1, "\n \n \n")
-
-
-
-N_1c = costruzione_base_canonica(N_1, vettore_entrante, indice_variabile_uscente, b)
-b_c = costruzione_base_canonica(N_1, vettore_entrante, indice_variabile_uscente, b, 1)
-
-print(N_1c)
-print(b_c)
-
-
-coppia = nuova_coppia_vettori_indici(x_b, x_n)
-x_bc = coppia[0]
-x_nc = coppia[1]
-
-print(x_bc, x_nc)
-'''
