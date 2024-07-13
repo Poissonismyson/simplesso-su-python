@@ -1,0 +1,23 @@
+u = [-3, -3, 0, 0, 0]  #coefficienti funzione obiettivo
+m = [[3, 2, 1, 0, 0], [2, -1, 0, 1, 0], [-1, 3, 0, 0, 1]]  # matrice di partenza
+b = [1, 2, 3]  # vettore dei termini noti
+
+u = [1, 2, 1, 1, 1, 1]  #coefficienti funzione obiettivo
+m = [[1, 2, 3, 1, 0, 0], [2, -1, -5, 0, 1, 0], [1, 2, -1, 0, 0, 1]]  # matrice di partenza
+b = [3, 2, 1]  # vettore dei termini noti
+
+u = [10, 1, 4, 40, 0]  #coefficienti funzione obiettivo
+m = [[0, -1, 4, 1, 0], [1, 3, 2, 0, -1]]  # matrice di partenza
+b = [10, 3]  # vettore dei termini noti
+
+u = [-2, 10, 10, -2, 6]  #coefficienti funzione obiettivo
+m = [[1, 1, 0, 1, 2], [1, 0, 1, 1, 1]]  # matrice di partenza
+b = [10, 8]  # vettore dei termini noti
+
+u = [1, 2, 1, 1, 1, 1]  #coefficienti funzione obiettivo
+m = [[1, 2, 3, 1, 0, 0], [2, -1, -5, 0, 1, 0], [1, -97, -1, 0, 0, 1]]  # matrice di partenza
+b = [3, 2, 1]  # vettore dei termini noti
+
+u = [5, -2, 3, -7]  #coefficienti funzione obiettivo
+m = [[-20, -22, 1, 0], [198, -211, 0, 1]]  # matrice di partenza
+b = [5, 2]  # vettore dei termini noti

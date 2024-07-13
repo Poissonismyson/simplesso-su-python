@@ -1,0 +1,3 @@
+u = [5, -2, 3, -7]  #coefficienti funzione obiettivo
+m = [[-20, -22, 1, 0], [198, -211, 0, 1]]  # matrice di partenza
+b = [5, 2]  # vettore dei termini noti

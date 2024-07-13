@@ -1,28 +1,39 @@
 from fractions import Fraction
 from copy import deepcopy
 
+def leggi_variabili(file):
+    with open(file, 'r') as file:
+        cont = file.read()
+    variables = {}
+    exec(cont, variables)
+    return variables['u'], variables['m'], variables['b']
 
+def B_generator(m):
+    B = []
+    for i in range(len(m)):
+        row = [0 for k in range(len(m))]
+        row[i] = 1
+        B.append(row)
+    return B
 def find_base(m, tipo='b'): # tipo = 'b' per base, 'c' per non base
-    B = [-1, -1, -1]
-    X_N = []
+    x_b = [-1] * len(m)
+    x_n = []
 
     for j in range(len(m[0])):
-        v_colonna = [m[0][j], m[1][j], m[2][j]]
-        
-        if v_colonna == [1, 0, 0] and B[0] == -1:
-            B[0] = j
-        elif v_colonna == [0, 1, 0] and B[1] == -1:
-            B[1] = j
-        elif v_colonna == [0, 0, 1] and B[2] == -1:
-            B[2] = j
+        col = [m[i][j] for i in range(len(m))]
+        if col.count(1) == 1 and col.count(0) == len(col) - 1:
+            posizione = col.index(1)
+            if x_b[posizione] == -1:
+                x_b[posizione] = j
+            else:
+                x_n.append(j)
         else:
-            X_N.append(j)
-    
+            x_n.append(j)
     if tipo == 'c':
-        return X_N
+        return x_n
     else:
-        return B
-    
+        return x_b    
+   
 def calcola_gamma_zero(N_T, c_B, c_N): # N_T = matrice non di base, c_B = vettore variabili di base della funzione obiettivo, c_N = vettore variabili non di base della funzione obiettivo
     vet = []
     for i in range(len(N_T)):
@@ -141,27 +152,23 @@ def print_vettore(v):
             u.append(el)
     return u
 
-u = [1, 2, 1, 1, 1, 1] #vettore dei costi
-m = [[1, 2, 3, 1, 0, 0], [2, -1, -5, 0, 1, 0], [1, 2, -1, 0, 0, 1]] #matrice di partenza
-B = [[1, 0, 0], [0, 1, 0], [0, 0, 1]] #matrice base
-b = [3, 2, 1] #vettore dei termini noti
+u, m, b = leggi_variabili('dati.txt')
 
-
-
+B = B_generator(m) #matrice base
 x_b = find_base(m, 'b') #vettore degli indici delle variabili di base
 x_n = find_base(m, 'c') #vettore degli indici delle variabili non di base
 N_t = calcola_matrice_non_di_base(m, x_n) #matrice non di base
-c_b = [u[k] for k in x_b] #vettore delle variabili di base della funzione obiettivo 
-c_n = [u[k] for k in x_n] #vettore delle variabili non di base della funzione obiettivo
 
 
-
-
-
-def simplesso(x_b, x_n, N_t, c_b, c_n, b, iterazione =0):
+def simplesso(x_b, x_n, N_t, b, u, iterazione =0):
 
     print(f"\n** Iterazione: {iterazione} **\n")
-
+    if iterazione == 5:
+        return
+    
+    c_b = [u[k] for k in x_b] #vettore delle variabili di base della funzione obiettivo
+    c_n = [u[k] for k in x_n] #vettore delle variabili non di base della funzione obiettivo
+    
     print("\nForma canonica:\n")
     print(f"x_b: {x_b}")
     print(f"x_n: {x_n}")
@@ -172,7 +179,7 @@ def simplesso(x_b, x_n, N_t, c_b, c_n, b, iterazione =0):
 
     print("\nCalcolo dei costi ridotti: ")
     g_0 = calcola_gamma_zero(N_t, c_b, c_n)
-    print(f"Gamma zero: {g_0}")
+    print(f"Gamma zero: {print_vettore(g_0)}")
 
     print("\nTest di ottimalità: ", test_ottimo(g_0))
 
@@ -183,7 +190,7 @@ def simplesso(x_b, x_n, N_t, c_b, c_n, b, iterazione =0):
     print("\nTest di illimitatezza: ", end='') 
     print(test_illimitatezza(g_0, N_t)) #test di illimitatezza
     if test_illimitatezza(g_0,N_t):
-        return "Il problema è illimitato inferiormente"
+        return -1
 
     print("\n\nCostruzione nuova base ammissibile:\n")
 
@@ -231,12 +238,18 @@ def simplesso(x_b, x_n, N_t, c_b, c_n, b, iterazione =0):
     print(f"N_t: {print_matrice(N_c_t)}")
     print(f"b: {print_vettore(b_c)}\n")
 
-    return simplesso(x_bc, x_nc, N_c_t, c_b, c_n, b_c, iterazione + 1)
+    return simplesso(x_bc, x_nc, N_c_t, b_c, u, iterazione + 1)
 
 
+soluz = simplesso(x_b, x_n, N_t, b, u)
 
+if soluz == -1:
+    print("\nIl problema non ha soluzione")
+else:
+    print(f"\nSoluzione: {print_vettore(soluz)}")
 
-soluz = simplesso(x_b, x_n, N_t, c_b, c_n, b)
-
-print(f"\nSoluzione: {print_vettore(soluz)}")
-
+'''
+u = [3, 2, 1, 1] #vettore dei costi
+m = [[1, 0, -1, 2], [0, 1, 2, -1]] #matrice di partenza
+b = [5, 3] #vettore dei termini noti
+'''
