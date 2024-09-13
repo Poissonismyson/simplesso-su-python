@@ -120,7 +120,7 @@ def nuova_coppia_vettori_indici(x_b, x_n, indice_variabile_entrante, indice_vari
     return [x_bc, x_nc]
 
 def soluzione(x_b, b):
-    soluzione = [0, 0, 0, 0, 0, 0]
+    soluzione = [0 for elem in u] #dimensione della soluzione
     for i in range(len(b)):
         soluzione[x_b[i]] = b[i]
     return soluzione
