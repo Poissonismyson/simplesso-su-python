@@ -197,12 +197,12 @@ def simplesso(x_b, x_n, N_t, b, u, iterazione =0):
     indice_variabile_entrante = g_0.index(min(g_0))
     vettore_entrante = N_t[indice_variabile_entrante]
     print(f"Indice variabile entrante: {indice_variabile_entrante}")
-    print(f"Vettore entrante: {vettore_entrante}")
+    print(f"Vettore entrante: {print_vettore(vettore_entrante)}")
 
     indice_variabile_uscente = criterio_uscita(indice_variabile_entrante, N_t, b)
     vettore_uscente = B[indice_variabile_uscente]
     print(f"Indice variabile uscente: {indice_variabile_uscente}")
-    print(f"Vettore uscente: {vettore_uscente}")
+    print(f"Vettore uscente: {print_vettore(vettore_uscente)}")
 
     N_1_t = [] #nuova matrice non di base trasposta
 
