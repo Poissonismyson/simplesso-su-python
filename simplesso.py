@@ -92,17 +92,17 @@ def trasposta_matrice(m):
 
 def costruzione_base_canonica(M, v_entrante, k, b, voglio_vettore =None):
     N = deepcopy(M)
-    a = list(range(len(v_entrante)))
+    a = deepcopy(v_entrante)
     for j in range(len(N[0])):
-        N[k][j] = (Fraction(N[k][j], v_entrante[k]))
-        a[k] = Fraction(b[k], v_entrante[k])
+        N[k][j] = (Fraction(N[k][j], Fraction(v_entrante[k])))
+        a[k] = Fraction(b[k], Fraction(v_entrante[k]))
 
  
     for i in range(len(N)):
         if i != k:
             for j in range(len(N[i])):
-                N[i][j] = Fraction(N[i][j]) + (N[k][j] * (-v_entrante[i]))
-            a[i] = Fraction(b[i]) + (a[k] * (-v_entrante[i]))
+                N[i][j] = Fraction(N[i][j]) + (N[k][j] * Fraction((-v_entrante[i])))
+            a[i] = Fraction(b[i]) + (a[k] * Fraction(-v_entrante[i]))
 
 
     if voglio_vettore:
@@ -122,7 +122,10 @@ def nuova_coppia_vettori_indici(x_b, x_n, indice_variabile_entrante, indice_vari
 def soluzione(x_b, b):
     soluzione = [0 for elem in u] #dimensione della soluzione
     for i in range(len(b)):
-        soluzione[x_b[i]] = b[i]
+        if b[i].denominator > 1000 or b[i].numerator > 1000:
+            soluzione[x_b[i]] = (round(float(b[i]),2))
+        else:
+            soluzione[x_b[i]] = b[i]
     return soluzione
 
 def print_matrice(m):
@@ -133,6 +136,8 @@ def print_matrice(m):
             if isinstance(m[i][j], Fraction):
                 if m[i][j].denominator == 1:
                     r.append(int(m[i][j].numerator))
+                elif m[i][j].denominator > 1000 or m[i][j].numerator > 1000:
+                    r.append(round(float(m[i][j]),2))
                 else:
                     r.append(f"{m[i][j].numerator}/{m[i][j].denominator}")
             else:
@@ -146,6 +151,8 @@ def print_vettore(v):
         if isinstance(el, Fraction):
             if el.denominator == 1:
                 u.append(int(el.numerator))
+            elif el.denominator > 1000 or el.numerator > 1000:
+                u.append(round(float(el),2))
             else:
                 u.append(f"{el.numerator}/{el.denominator}")        
         else:
