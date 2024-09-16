@@ -40,7 +40,7 @@ def calcola_gamma_zero(N_T, c_B, c_N): # N_T = matrice non di base, c_B = vettor
         sum = 0
         for j in range(len(N_T[i])):
             sum += c_B[j] * N_T[i][j] 
-        vet.append(c_N[i] - sum) 
+        vet.append(Fraction(c_N[i] - sum)) 
     return vet
 
 def calcola_matrice_non_di_base(m, x_N): # m = matrice, x_N = vettore delle variabili non di base
@@ -48,7 +48,7 @@ def calcola_matrice_non_di_base(m, x_N): # m = matrice, x_N = vettore delle vari
     for n in x_N:
         v = []
         for i in range(len(m)):
-            v.append(m[i][n])
+            v.append(Fraction(m[i][n]))
         N_T.append(v)
     return N_T
 
@@ -94,15 +94,15 @@ def costruzione_base_canonica(M, v_entrante, k, b, voglio_vettore =None):
     N = deepcopy(M)
     a = deepcopy(v_entrante)
     for j in range(len(N[0])):
-        N[k][j] = (Fraction(N[k][j], Fraction(v_entrante[k])))
-        a[k] = Fraction(b[k], Fraction(v_entrante[k]))
+        N[k][j] = (Fraction(Fraction(N[k][j]), Fraction(v_entrante[k])))
+        a[k] = Fraction(Fraction(b[k]), Fraction(v_entrante[k]))
 
  
     for i in range(len(N)):
         if i != k:
             for j in range(len(N[i])):
-                N[i][j] = Fraction(N[i][j]) + (N[k][j] * Fraction((-v_entrante[i])))
-            a[i] = Fraction(b[i]) + (a[k] * Fraction(-v_entrante[i]))
+                N[i][j] = Fraction(Fraction(N[i][j])) + (Fraction(N[k][j]) * Fraction((-v_entrante[i])))
+            a[i] = Fraction(b[i]) + (Fraction(a[k]) * Fraction(-v_entrante[i]))
 
 
     if voglio_vettore:
